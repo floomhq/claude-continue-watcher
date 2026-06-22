@@ -55,7 +55,7 @@ tell application "iTerm2"
         repeat with i from startIdx to cnt
           set tailTxt to tailTxt & (item i of para) & linefeed
         end repeat
-        set isClaude to (tailTxt contains "shift+tab to cycle") or (tailTxt contains "? for shortcuts")
+        set isClaude to (tailTxt contains "shift+tab to cycle") or (tailTxt contains "for shortcuts") or (tailTxt contains "⏵⏵") or ((tailTxt contains "Context") and (tailTxt contains "Usage"))
         set hasBanner to (tailTxt contains "API Error:")
         set isTransient to (tailTxt contains "temporarily limiting requests") or (tailTxt contains "Overloaded") or (tailTxt contains "overloaded_error") or (tailTxt contains "Error: 529") or (tailTxt contains "server-side issue")
         set isBusy to (tailTxt contains "esc to interrupt")
