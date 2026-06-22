@@ -15,7 +15,7 @@ Cross-platform via **tmux** (Linux, macOS, Windows/WSL), plus a native
 Via [skills.sh](https://skills.sh):
 
 ```bash
-npx skills add federicodeponte/claude-continue-watcher
+npx skills add floomhq/claude-continue-watcher
 ```
 
 Then run the installer (auto-picks tmux if a tmux server is running, else iTerm2
@@ -29,7 +29,7 @@ bash ~/.claude/skills/claude-continue-watcher/install.sh
 Or clone and install directly:
 
 ```bash
-git clone https://github.com/federicodeponte/claude-continue-watcher
+git clone https://github.com/floomhq/claude-continue-watcher
 bash claude-continue-watcher/skills/claude-continue-watcher/install.sh
 ```
 
