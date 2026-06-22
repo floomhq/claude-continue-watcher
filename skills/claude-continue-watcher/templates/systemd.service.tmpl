@@ -1,0 +1,13 @@
+[Unit]
+Description=Claude Code rate-limit auto-continue watcher (tmux)
+After=default.target
+
+[Service]
+Type=simple
+Environment=INTERVAL=__INTERVAL__
+ExecStart=/bin/bash __SCRIPT__
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=default.target
