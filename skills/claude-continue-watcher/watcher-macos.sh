@@ -24,8 +24,10 @@ PAUSE_FILE="${PAUSE_FILE:-$HOME/.claude/claude-watcher.pause}"
 log() { printf '%s %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*"; }
 
 # --- decide_pane: stdin = pane text; stdout = "transient" | "usage" | "" ------
+# (sed normalizes the non-breaking space U+00A0 that Claude renders after the
+#  "❯" prompt, so the idle-prompt check matches.)
 decide_pane() {
-  awk '
+  sed $'s/\xc2\xa0/ /g' | awk '
   { L[NR]=$0 }
   END {
     n=NR; if (n==0) { print ""; exit }

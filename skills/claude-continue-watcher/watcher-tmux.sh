@@ -26,7 +26,7 @@ log() { printf '%s %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*"; }
 command -v tmux >/dev/null 2>&1 || { echo "tmux not found"; exit 1; }
 
 decide_pane() {
-  awk '
+  sed $'s/\xc2\xa0/ /g' | awk '
   { L[NR]=$0 }
   END {
     n=NR; if (n==0) { print ""; exit }
