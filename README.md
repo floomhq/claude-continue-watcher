@@ -65,11 +65,10 @@ Tunables (`INTERVAL`, `TAIL_LINES`, `DRY_RUN`, `SKIP_PATTERN`) are documented in
 | Backend | Where | Notes |
 |---------|-------|-------|
 | **tmux** | Linux, macOS, Windows (WSL) | Run your Claude Code sessions inside tmux. The cross-platform path. |
-| **iTerm2** | macOS | No tmux needed; first run needs a one-time Automation permission grant. |
+| **macOS native** | macOS | Scans both **iTerm2** and **Apple Terminal**, no tmux needed. First run needs a one-time Automation permission grant for each app. |
 
-Not supported: macOS **Apple Terminal** (weak automation API, use tmux instead)
-and **native Windows** terminals without WSL (no buffer-read API). Force a
-backend with `WATCHER=tmux` or `WATCHER=iterm`.
+Not supported: **native Windows** terminals without WSL (no buffer-read API).
+Force a backend with `WATCHER=tmux` or `WATCHER=iterm`.
 
 ## License
 

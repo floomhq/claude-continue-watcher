@@ -1,6 +1,6 @@
 ---
 name: claude-continue-watcher
-description: 'Auto-recover Claude Code CLI sessions from transient API rate-limit / overload errors (API Error temporarily limiting requests, 529 Overloaded) by detecting the idle error banner and sending continue every few seconds until the API recovers. Use when asked to auto-continue, auto-retry, babysit, or unstick Claude Code sessions that keep hitting rate limits or 529s. Cross-platform via tmux (Linux, macOS, Windows WSL), plus native iTerm2 on macOS.'
+description: 'Auto-recover Claude Code CLI sessions from transient API rate-limit / overload errors (API Error temporarily limiting requests, 529 Overloaded) by detecting the idle error banner and sending continue every few seconds until the API recovers. Use when asked to auto-continue, auto-retry, babysit, or unstick Claude Code sessions that keep hitting rate limits or 529s. Cross-platform via tmux (Linux, macOS, Windows WSL), plus native iTerm2 + Apple Terminal on macOS.'
 ---
 
 # claude-continue-watcher
@@ -33,13 +33,16 @@ backends provide that:
 
 - **tmux** — the cross-platform path. Works on **Linux, macOS, and Windows
   (WSL)**. Run your Claude Code sessions inside tmux.
-- **iTerm2** — macOS convenience when you are not using tmux.
+- **macOS native** — scans both **iTerm2** (`write text`) and **Apple Terminal**
+  (`do script`), no tmux needed.
 
-`install.sh` auto-picks tmux if a tmux server is running, otherwise iTerm2 on
-macOS. Force a backend with `WATCHER=tmux` or `WATCHER=iterm`.
+`install.sh` auto-picks tmux if a tmux server is running, otherwise the macOS
+native backend. Force with `WATCHER=tmux` or `WATCHER=iterm`.
 
-Not supported: macOS **Apple Terminal** (weak automation API — use tmux
-instead) and **native Windows** terminals without WSL (no buffer-read API).
+The macOS backend needs Automation permission to control iTerm2 and Terminal
+(approve the one-time "control" prompts, or grant under System Settings >
+Privacy & Security > Automation). Not supported: **native Windows** terminals
+without WSL (no buffer-read API).
 
 ## Install
 

@@ -49,7 +49,7 @@ case "$MODE" in
     install -m755 "$DIR/watcher-tmux.sh" "$BIN_DIR/claude-continue-watcher.sh" ;;
   iterm)
     [ "$OS" = "Darwin" ] || { echo "WATCHER=iterm is macOS-only"; exit 1; }
-    install -m755 "$DIR/watcher-iterm.sh" "$BIN_DIR/claude-continue-watcher.sh" ;;
+    install -m755 "$DIR/watcher-macos.sh" "$BIN_DIR/claude-continue-watcher.sh" ;;
   *)
     echo "Unknown WATCHER='$MODE' (use tmux or iterm)"; exit 1 ;;
 esac
