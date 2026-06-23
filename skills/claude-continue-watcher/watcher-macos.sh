@@ -53,7 +53,8 @@ tell application "iTerm2"
         set hasBanner to (tailTxt contains "API Error:")
         set isTransient to (tailTxt contains "temporarily limiting requests") or (tailTxt contains "Overloaded") or (tailTxt contains "overloaded_error") or (tailTxt contains "Error: 529") or (tailTxt contains "server-side issue")
         set isBusy to (tailTxt contains "esc to interrupt")
-        if isClaude and hasBanner and isTransient and (not isBusy) then
+        set isUsage to (tailTxt contains "hit your") and (tailTxt contains "limit") and (tailTxt contains "resets")
+        if isClaude and (not isBusy) and ((hasBanner and isTransient) or (("$DO_USAGE" is "1") and isUsage)) then
           if "$DRY_RUN" is "0" then
             tell s to write text "continue"
           end if
@@ -92,7 +93,8 @@ tell application "Terminal"
       set hasBanner to (tailTxt contains "API Error:")
       set isTransient to (tailTxt contains "temporarily limiting requests") or (tailTxt contains "Overloaded") or (tailTxt contains "overloaded_error") or (tailTxt contains "Error: 529") or (tailTxt contains "server-side issue")
       set isBusy to (tailTxt contains "esc to interrupt")
-      if isClaude and hasBanner and isTransient and (not isBusy) then
+      set isUsage to (tailTxt contains "hit your") and (tailTxt contains "limit") and (tailTxt contains "resets")
+      if isClaude and (not isBusy) and ((hasBanner and isTransient) or (("$DO_USAGE" is "1") and isUsage)) then
         if "$DRY_RUN" is "0" then
           do script "continue" in tab ti of w
         end if
@@ -158,10 +160,17 @@ return "iterm=" & itc & " terminal=" & tm
 OSA
 }
 
-log "claude-continue-watcher started (iTerm2 + Terminal.app, interval=${INTERVAL}s, tail=${TAIL_LINES}, dry_run=${DRY_RUN}, pause_file=${PAUSE_FILE})"
+USAGE_INTERVAL="${USAGE_INTERVAL:-600}"   # 10 min: cadence for the 5h/weekly usage-limit "continue"
+last_usage=0
+DO_USAGE=0
+
+log "claude-continue-watcher started (iTerm2 + Terminal.app, interval=${INTERVAL}s, tail=${TAIL_LINES}, usage_interval=${USAGE_INTERVAL}s, dry_run=${DRY_RUN}, pause_file=${PAUSE_FILE})"
 log "reachability: $(reachability)  (terminal=0 while sessions exist => grant 'Terminal' Automation to the watcher)"
 while true; do
   if [ -f "$PAUSE_FILE" ]; then sleep "$INTERVAL"; continue; fi
+  now="$(date +%s)"
+  DO_USAGE=0
+  if [ "$(( now - last_usage ))" -ge "$USAGE_INTERVAL" ]; then DO_USAGE=1; last_usage="$now"; fi
   report "$(scan_iterm)"
   report "$(scan_terminal)"
   sleep "$INTERVAL"
