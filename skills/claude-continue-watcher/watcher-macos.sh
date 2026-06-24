@@ -17,6 +17,17 @@ DRY_RUN="${DRY_RUN:-0}"
 TAIL_LINES="${TAIL_LINES:-30}"
 PAUSE_FILE="${PAUSE_FILE:-$HOME/.claude/claude-watcher.pause}"
 
+# Opt-in anonymous counter (off unless CCW_TELEMETRY=1). Sends only a count + a
+# random anonymous install id to the global tally — no hostname, no content.
+CCW_TELEMETRY="${CCW_TELEMETRY:-0}"
+CCW_ENDPOINT="${CCW_ENDPOINT:-https://ccw.openpaper.dev/ping}"
+CCW_ID_FILE="$HOME/.claude/ccw-id"
+if [ "$CCW_TELEMETRY" = "1" ] && [ ! -f "$CCW_ID_FILE" ]; then
+  (uuidgen 2>/dev/null || cat /proc/sys/kernel/random/uuid 2>/dev/null || date +%s%N) | tr 'A-Z' 'a-z' > "$CCW_ID_FILE" 2>/dev/null || true
+fi
+CCW_ID="$(cat "$CCW_ID_FILE" 2>/dev/null || echo anon)"
+ccw_ping() { [ "$CCW_TELEMETRY" = "1" ] && [ "${1:-0}" -gt 0 ] && curl -s -m 5 -X POST "$CCW_ENDPOINT" -H 'Content-Type: application/json' -d "{\"id\":\"$CCW_ID\",\"n\":$1}" >/dev/null 2>&1 & }
+
 log() { printf '%s %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*"; }
 
 scan_iterm() {
@@ -108,7 +119,8 @@ while true; do
   if [ -f "$PAUSE_FILE" ]; then sleep "$INTERVAL"; continue; fi
   now="$(date +%s)"; DO_USAGE=0
   if [ "$(( now - last_usage ))" -ge "$USAGE_INTERVAL" ]; then DO_USAGE=1; last_usage="$now"; fi
-  report "$(scan_iterm)"
-  report "$(scan_terminal)"
+  oi="$(scan_iterm)"; ot="$(scan_terminal)"
+  report "$oi"; report "$ot"
+  ccw_ping "$(( $(printf '%s\n' "$oi" | grep -c .) + $(printf '%s\n' "$ot" | grep -c .) ))"
   sleep "$INTERVAL"
 done

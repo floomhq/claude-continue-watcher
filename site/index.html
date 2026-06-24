@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>claude-continue-watcher — auto-continues sent</title>
+<meta name="description" content="Live count of times Claude Code resumed itself after a rate limit, without anyone typing.">
+<meta property="og:title" content="Claude Code resumed itself this many times">
+<meta property="og:description" content="A tiny watcher types 'continue' when Claude Code hits a rate limit. Here's the running total.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#FAFAF8;--ink:#1a1a1a;--muted:#6b6b66;--green:#059669;--line:#ece9e2;--card:#fff}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:'Plus Jakarta Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.5}
+  .wrap{max-width:760px;margin:0 auto;padding:80px 24px 64px}
+  .kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--green);margin-bottom:28px}
+  h1{font-family:'DM Serif Display',serif;font-size:clamp(34px,5vw,52px);line-height:1.08;font-weight:400;letter-spacing:-.01em}
+  h1 em{font-style:italic;color:var(--green)}
+  .lead{color:var(--muted);font-size:18px;margin-top:18px;max-width:54ch}
+  .counter{margin:56px 0 8px;text-align:center}
+  .num{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:clamp(72px,16vw,148px);letter-spacing:-.03em;line-height:1;color:var(--ink);font-variant-numeric:tabular-nums}
+  .num-label{font-size:18px;color:var(--ink);margin-top:14px;font-weight:600}
+  .num-sub{font-size:15px;color:var(--muted);margin-top:6px}
+  .live{display:inline-flex;align-items:center;gap:7px;margin-top:18px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted)}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 0 rgba(5,150,105,.5);animation:pulse 2s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(5,150,105,.5)}70%{box-shadow:0 0 0 8px rgba(5,150,105,0)}100%{box-shadow:0 0 0 0 rgba(5,150,105,0)}}
+  .how{margin-top:64px;border-top:1px solid var(--line);padding-top:40px}
+  .how h2{font-family:'DM Serif Display',serif;font-weight:400;font-size:24px;margin-bottom:18px}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  @media(max-width:620px){.steps{grid-template-columns:1fr}}
+  .step{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px}
+  .step .n{font-family:'JetBrains Mono',monospace;color:var(--green);font-size:13px;font-weight:700}
+  .step p{font-size:15px;margin-top:8px}
+  .install{margin-top:44px;background:#10100f;border-radius:16px;padding:20px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .install code{font-family:'JetBrains Mono',monospace;color:#f3f2ee;font-size:15px;font-weight:500}
+  .install a{font-family:'JetBrains Mono',monospace;font-size:13px;color:#8b8b86;text-decoration:none}
+  .install a:hover{color:#fff}
+  footer{margin-top:48px;color:var(--muted);font-size:13.5px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+  footer a{color:var(--green);text-decoration:none}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="kicker">claude-continue-watcher</div>
+    <h1>Times Claude Code resumed itself <em>without anyone typing.</em></h1>
+    <p class="lead">Rate limits stall long agent runs. A tiny watcher notices, types <b>continue</b>, and the run picks back up. This is how often that's happened across everyone running it.</p>
+
+    <div class="counter">
+      <div class="num" id="num">—</div>
+      <div class="num-label">auto-continues sent</div>
+      <div class="num-sub">so a human didn't have to babysit the terminal</div>
+      <div class="live"><span class="dot"></span> <span id="livelbl">live</span></div>
+    </div>
+
+    <div class="how">
+      <h2>How it works</h2>
+      <div class="steps">
+        <div class="step"><div class="n">01</div><p>Claude Code hits a transient rate limit and stops.</p></div>
+        <div class="step"><div class="n">02</div><p>The watcher sees the banner in your terminal.</p></div>
+        <div class="step"><div class="n">03</div><p>It types <b>continue</b> until the servers are back.</p></div>
+      </div>
+    </div>
+
+    <div class="install">
+      <code>npx skills add floomhq/claude-continue-watcher</code>
+      <a href="https://github.com/floomhq/claude-continue-watcher">github.com/floomhq/claude-continue-watcher →</a>
+    </div>
+
+    <footer>
+      <span>macOS, Linux &amp; Windows (WSL). Counter is opt-in &amp; anonymous.</span>
+      <span>by <a href="https://github.com/floomhq">floomhq</a></span>
+    </footer>
+  </div>
+
+<script>
+  var API='https://ccw.openpaper.dev/count', el=document.getElementById('num'), live=document.getElementById('livelbl');
+  var shown=0, target=0;
+  function fmt(n){return n.toLocaleString('en-US')}
+  function animate(){ // ease shown -> target
+    if(shown!==target){ var d=target-shown; shown += Math.sign(d)*Math.max(1,Math.floor(Math.abs(d)/8)); if((d>0&&shown>target)||(d<0&&shown<target))shown=target; el.textContent=fmt(shown); requestAnimationFrame(animate);} else el.textContent=fmt(target);
+  }
+  async function pull(){
+    try{ var r=await fetch(API,{cache:'no-store'}); var j=await r.json(); if(typeof j.total==='number'){ target=j.total; if(shown===0){shown=Math.max(0,target-Math.min(target,80));} requestAnimationFrame(animate); live.textContent='live'; } }
+    catch(e){ live.textContent='reconnecting…'; }
+  }
+  pull(); setInterval(pull, 8000);
+</script>
+</body>
+</html>

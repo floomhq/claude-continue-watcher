@@ -8,7 +8,15 @@ banner** in a Claude Code session, `API Error: Server is temporarily limiting
 requests`, `529 Overloaded`, etc., and sends `continue` until the API recovers.
 
 Cross-platform via **tmux** (Linux, macOS, Windows/WSL), plus a native
-**iTerm2** backend on macOS when you are not using tmux.
+**iTerm2 + Apple Terminal** backend on macOS when you are not using tmux.
+
+## Live counter
+
+[**claude-continue-watcher.vercel.app**](https://claude-continue-watcher.vercel.app)
+— a running tally of every `continue` auto-sent by people running this, so a
+human didn't have to. Contributing is **opt-in and anonymous**: set
+`CCW_TELEMETRY=1` and the watcher sends only a count plus a random id (no
+hostname, no content). Backend + privacy notes in [`counter/`](counter/).
 
 ## Install
 
