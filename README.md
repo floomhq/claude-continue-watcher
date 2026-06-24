@@ -1,5 +1,7 @@
 # claude-continue-watcher
 
+[![continues auto-sent](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fccw.openpaper.dev%2Fcount&query=%24.total&label=continues%20auto-sent&color=059669&style=flat-square)](https://claude-continue-watcher.vercel.app)
+
 Claude Code rate limits are annoying. Less annoying if something types
 `continue` for you every few seconds until the servers are back. :=)
 
