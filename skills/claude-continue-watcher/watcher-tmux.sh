@@ -9,7 +9,7 @@ TAIL_LINES="${TAIL_LINES:-30}"
 PAUSE_FILE="${PAUSE_FILE:-$HOME/.claude/claude-watcher.pause}"
 SKIP_PATTERN="${SKIP_PATTERN:-}"
 CLAUDE_UI='shift\+tab to cycle|⏵⏵|for agents|context used|Context.*Usage'
-TRANSIENT='temporarily limiting requests|Overloaded|overloaded_error|Error: 529|server-side issue|Rate limited'
+TRANSIENT='temporarily limiting requests|Overloaded|overloaded_error|Error: 529|server-side issue|Rate limited|Unable to connect|ConnectionRefused|Connection refused|Connection error|Internal server error'
 
 # Opt-in anonymous counter (off unless CCW_TELEMETRY=1). Sends only a count + a
 # random anonymous install id to the global tally — no hostname, no content.

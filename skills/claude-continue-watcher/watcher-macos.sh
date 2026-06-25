@@ -51,7 +51,7 @@ tell application "iTerm2"
           set tl to tl & (item i of para) & linefeed
         end repeat
         set isClaude to (tl contains "shift+tab to cycle") or (tl contains "⏵⏵") or (tl contains "for agents") or (tl contains "context used") or ((tl contains "Context") and (tl contains "Usage"))
-        set isTransient to (tl contains "API Error:") and ((tl contains "temporarily limiting requests") or (tl contains "Overloaded") or (tl contains "overloaded_error") or (tl contains "Error: 529") or (tl contains "server-side issue") or (tl contains "Rate limited"))
+        set isTransient to (tl contains "API Error:") and ((tl contains "temporarily limiting requests") or (tl contains "Overloaded") or (tl contains "overloaded_error") or (tl contains "Error: 529") or (tl contains "server-side issue") or (tl contains "Rate limited") or (tl contains "Unable to connect") or (tl contains "ConnectionRefused") or (tl contains "Connection refused") or (tl contains "Connection error") or (tl contains "Internal server error"))
         set isUsage to (tl contains "hit your") and (tl contains "limit") and (tl contains "resets")
         set isBusy to (tl contains "esc to interrupt")
         if isClaude and (not isBusy) and (isTransient or (("$DO_USAGE" is "1") and isUsage)) then
@@ -89,7 +89,7 @@ tell application "Terminal"
         set tl to tl & (item i of para) & linefeed
       end repeat
       set isClaude to (tl contains "shift+tab to cycle") or (tl contains "⏵⏵") or (tl contains "for agents") or (tl contains "context used") or ((tl contains "Context") and (tl contains "Usage"))
-      set isTransient to (tl contains "API Error:") and ((tl contains "temporarily limiting requests") or (tl contains "Overloaded") or (tl contains "overloaded_error") or (tl contains "Error: 529") or (tl contains "server-side issue") or (tl contains "Rate limited"))
+      set isTransient to (tl contains "API Error:") and ((tl contains "temporarily limiting requests") or (tl contains "Overloaded") or (tl contains "overloaded_error") or (tl contains "Error: 529") or (tl contains "server-side issue") or (tl contains "Rate limited") or (tl contains "Unable to connect") or (tl contains "ConnectionRefused") or (tl contains "Connection refused") or (tl contains "Connection error") or (tl contains "Internal server error"))
       set isUsage to (tl contains "hit your") and (tl contains "limit") and (tl contains "resets")
       set isBusy to (tl contains "esc to interrupt")
       if isClaude and (not isBusy) and (isTransient or (("$DO_USAGE" is "1") and isUsage)) then
